@@ -8,5 +8,5 @@
    ╚═╝    ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝     ╚═════╝ ╚═╝         ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝       ╚═════╝    ╚═╝       ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝
                                                                                                                                                                                                                             ]]
                                                                                                                                                                                                                             
-game:GetService'Players'.LocalPlayer:Kick('Please try this script later!')
+setclipboard('loadstring(game)')
 
