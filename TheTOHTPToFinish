@@ -1,0 +1,5 @@
+--u have a risk of getting banned use at your own risk
+repeat wait() until game:IsLoaded()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").tower.sections.finish.Finish.CFrame
+print("Teleported to end!")
+print("Made by Nicuse#6163")
