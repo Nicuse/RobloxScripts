@@ -97,8 +97,8 @@ while _G.Autofarm do
 	end
 end
 
-MainSection:NewButton("Autofarm", " ", function()
-	_G.Autofarm = true
+MainSection:NewToggle("Autofarm", " ", function(state)
+	_G.Autofarm = state
 end)
 
 local GamepassesSection = GamepassesTab:NewSection("Gamepass")
@@ -225,6 +225,7 @@ LocalPlayerSection:NewButton("Fly [E]", " ", function()
 end)
 
 local CreditsSection = CreditsTab:NewSection("Credits")
+
 
 CreditsSection:NewButton("Copy Discord", "Discord: Nicuse#6163", function()
 	setclipboard("Nicuse#6163")
