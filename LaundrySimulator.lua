@@ -97,8 +97,8 @@ while _G.Autofarm do
 	end
 end
 
-MainSection:NewToggle("Autofarm", " ", function(state)
-	_G.Autofarm = state
+MainSection:NewButton("Autofarm", " ", function()
+	_G.Autofarm = true
 end)
 
 local GamepassesSection = GamepassesTab:NewSection("Gamepass")
