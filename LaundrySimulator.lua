@@ -5,132 +5,100 @@ local Window = Library.CreateLib("Laundry Simulator", "Ocean")
 local MainTab = Window:NewTab("Main")
 local GamepassesTab = Window:NewTab("Gamepasses")
 local LocalPlayerTab = Window:NewTab("LocalPlayer")
+local CreditsTab = Window:NewTab("Credits")
 
 --Main
 local MainSection = MainTab:NewSection("Main")
 
-MainSection:NewButton("Autofarm", " ", function()
-	local x = getrawmetatable(game)
-	setreadonly(x, false)
-	local old_namecall = x.__namecall
+_G.Autofarm = false;
 
-	x.__namecall = function(a, ...)
-		local method = getnamecallmethod()
-		local Args = {...}
-		if method == "FireServer" then
-			if tostring(Args[2]):find("LocalError") then
-				return 
-			end
-		end
-		return old_namecall(a, ...)
+while _G.Autofarm do
+	wait()
+	local VirtualUser = game:service("VirtualUser")
+	game:service('Players').LocalPlayer.Idled:connect(function()
+		VirtualUser:CaptureController()
+		VirtualUser:ClickButton2(Vector2.new())
+	end)
+
+	local owned_plot = game.Players.LocalPlayer.NonSaveVars.OwnsPlot
+	while owned_plot.Value == nil do
+		wait(1)
 	end
 
-	pcall(function()
-		function GetClothes() 
-			local Clothing = workspace.Debris.Clothing:GetChildren()
-			for i,v in pairs(Clothing) do
-				local Remote = game.ReplicatedStorage.Events['GrabClothing']
-				local Arguments = {
-					[1] = v
-				}
-				Remote:FireServer(unpack(Arguments))
-			end
-		end
+	while wait(0.01) do
 
-		function GetPlot()
-			local AllPlots = workspace.Plots:GetChildren()
-			for i,v in pairs(AllPlots) do
-				if tostring(v.Owner.Value) == game.Players.LocalPlayer.Name then
-					return v
+		game.Players.LocalPlayer.Gamepasses.NitroSpeed.Value = true
+
+		local basket_status = game.Players.LocalPlayer.NonSaveVars.BasketStatus
+		local backpack_amount = game.Players.LocalPlayer.NonSaveVars.BackpackAmount
+		local washing_machine_capacity = game.Players.LocalPlayer.NonSaveVars.TotalWashingMachineCapacity
+		local basket_size = game.Players.LocalPlayer.NonSaveVars.BasketSize
+		local remaining_basket = math.min(basket_size.Value - backpack_amount.Value, washing_machine_capacity.Value - backpack_amount.Value)
+
+		if basket_status.Value == "Dirty" or backpack_amount.Value == 0 then
+			while remaining_basket > 0 do
+				remaining_basket = math.min(basket_size.Value - backpack_amount.Value, washing_machine_capacity.Value - backpack_amount.Value)
+
+				local clothes_array = game.Workspace.Debris.Clothing:GetChildren()
+
+				local count_clothes = #clothes_array
+				for i = 1, #clothes_array do
+					if clothes_array[i].Name == "Magnet" then
+						count_clothes -= 1
+					end
+				end
+
+				if count_clothes == 0 then
+					break
+				end
+
+				local index = 1
+				local closest_cloth = nil
+				while closest_cloth == nil do
+					if index > #clothes_array then
+						index = 1
+					end
+					closest_cloth = clothes_array[index]
+					index += 1
+					wait(0.01)
+				end
+
+				local humanoid_root_part = game.Players.LocalPlayer.Character.HumanoidRootPart
+				local temp = (closest_cloth.Position - humanoid_root_part.Position).Magnitude
+
+				for i in ipairs(clothes_array) do
+					local magnitude = (clothes_array[i].Position - humanoid_root_part.Position).Magnitude
+					if (magnitude < temp or clothes_array[i]:FindFirstChild("SpecialTag")) and clothes_array[i].Name ~= "Magnet" then
+						temp = magnitude
+						closest_cloth = clothes_array[i]
+					end
+				end
+
+				game.ReplicatedStorage.Events.GrabClothing:FireServer(closest_cloth)
+				wait(0.01)
+			end     
+
+			local washing_machines = owned_plot.Value.WashingMachines:GetChildren()
+			for i in ipairs(washing_machines) do
+				if washing_machines[i].Config.CycleFinished.Value then
+					game.ReplicatedStorage.Events.UnloadWashingMachine:FireServer(washing_machines[i])
+					game.ReplicatedStorage.Events.DropClothesInChute:FireServer()
+				else
+					local temp = washing_machines[i].Config.Capacity.Value
+					for j = 1, backpack_amount.Value do
+						game.ReplicatedStorage.Events.LoadWashingMachine:FireServer(washing_machines[i])
+						if temp >= washing_machines[i].Config.Capacity.Value then
+							break
+						end
+					end
 				end
 			end
 		end
+	end
+end
 
-		function LoadWash()
-
-			local Plot = GetPlot()
-
-			for i,v in pairs(Plot["WashingMachines"]:GetChildren()) do 
-				GetClothes()
-
-				wait(0.5)
-
-				local CFrame = v["MAIN"].CFrame
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame
-
-				wait(0.5)
-
-				local Remote = game.ReplicatedStorage.Events['LoadWashingMachine']
-				local Arguments = {
-					[1] = v
-				}
-				Remote:FireServer(unpack(Arguments))
-			end
-
-
-		end
-
-		function Drop()
-			local CFrame = CFrame.new(-142.327789, 4.49800396, -6.91391087, 0.194494158, -9.69223208e-08, 0.980903685, -2.39351117e-08, 1, 1.03555081e-07, -0.980903685, -4.36188969e-08, 0.194494158)
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame
-			wait(0.2)
-			local Remote = game.ReplicatedStorage.Events['DropClothesInChute']
-			local Arguments = {
-
-			}
-			Remote:FireServer(unpack(Arguments))
-		end
-
-		function UnLoadWash()
-
-			local Plot = GetPlot()
-
-			for i,v in pairs(Plot["WashingMachines"]:GetChildren()) do 
-				local CFrame = v["MAIN"].CFrame
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame
-
-				wait(0.5)
-
-				local Remote = game.ReplicatedStorage.Events['UnloadWashingMachine']
-				local Arguments = {
-					[1] = v
-				}
-				Remote:FireServer(unpack(Arguments))
-
-				wait(0.5)
-
-				Drop()
-			end
-		end
-
-		local UI_Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/ShowerHead-FluxTeam/NICEWORD/main/FUCKV3RM"))()
-		local Window = UI_Lib:Window("FluxHub")
-		local Section = Window:Section("NICEWORDa Farm")
-
-		_G.IsAutoNICEWORDaOn = false;
-
-		Section:Toggle("Auto Farm", function(State)
-			_G.IsAutoNICEWORDaOn = State
-		end)
-
-		function CollectCoins()
-			LoadWash()
-
-			wait(15)
-
-			UnLoadWash()
-
-			wait(0.5)
-		end
-
-		while wait() do
-			if _G.IsAutoNICEWORDaOn then
-				if GetPlot() then
-					CollectCoins()
-				end
-			end
-		end
-	end)
+MainSection:NewToggle("Autofarm", " ", function(state)
+	_G.Autofarm = state
 end)
 
 local GamepassesSection = GamepassesTab:NewSection("Gamepass")
@@ -254,6 +222,12 @@ LocalPlayerSection:NewButton("Fly [E]", " ", function()
 			end 
 		end)
 		Fly()
+end)
+
+local CreditsSection = CreditsTab:NewSection("Credits")
+
+CreditsSection:NewButton("Copy Discord", "Discord: Nicuse#6163", function()
+	setclipboard("Nicuse#6163")
 end)
 
 
