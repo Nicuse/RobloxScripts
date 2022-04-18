@@ -163,6 +163,10 @@ end)
 
 CreditNUIToggleSection = MainTab:NewSection("Credits And Toggle UI")
 
-MainSection:NewKeybind("Toggle UI", "Toggles UI.", Enum.KeyCode.RightShift, function()
+CreditNUIToggleSection:NewKeybind("Toggle UI", "Toggles UI.", Enum.KeyCode.RightShift, function()
 	Library:ToggleUI()
+end)
+
+CreditNUIToggleSection:NewButton("Copy Discord", "String: Nicuse#6163", function()
+    setclipboard("Nicuse#6163")
 end)
