@@ -88,6 +88,16 @@ MainSection:NewToggle("Infinite Stamina", "Gives you inf stamina. (Only while sp
 	end
 end)
 
+_G.AlwaysSprinting = false;
+
+MainSection:NewToggle("Always Sprinting", "Always sprints for you.", function(state)
+	local CharWalkspeed = game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed
+
+	if _G.AlwaysSprinting == true then
+		CharWalkspeed = 18.1
+	end
+end)
+
 _G.NoJumpCooldown = false;	
 
 MainSection:NewToggle("No Jump Cooldown", "No jump cooldown.", function(state)
