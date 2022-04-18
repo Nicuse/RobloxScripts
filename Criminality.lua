@@ -1,3 +1,38 @@
+local RunService = game:GetService("RunService")
+repeat wait() until game:IsLoaded()
+
+function BypassAnticheat()
+    local function CheckTable(tbl, ...)
+        local Indexes = {...}
+
+
+        for _, v in ipairs(Indexes) do
+            if not (rawget(tbl, v)) then
+                return false
+            end
+        end
+    
+        return true
+    end
+    
+    local u21
+    for _,v in ipairs(getgc(true)) do
+        if (typeof(v) == "table" and CheckTable(v, "A", "B", "GP", "EN")) then
+            u21 = v
+            break
+        end
+    end
+    
+    hookfunction(u21.A, function()
+    
+    end)
+    hookfunction(u21.B, function()
+    
+    end)
+end
+
+BypassAnticheat()
+
 
 game:GetService("RunService").RenderStepped:Connect(function()
 	for _, Connection in next, getconnections(game:GetService("ScriptContext").Error) do
@@ -37,11 +72,11 @@ MainSection:NewToggle("Infinite Stamina", "Gives you inf stamina. (Only while sp
 					if not CharacterVar or not CharacterVar.Parent then
 						local CharacterVar = game.Players.LocalPlayer.CharacterAdded:wait()
 
-						if CharacterVar:WaitForChild("Humanoid").WalkSpeed > 18 then
+						if CharacterVar:WaitForChild("Humanoid").WalkSpeed > 16 then
 							getupvalue(StaminaFunc, 6).S = 99
 						end
 					elseif CharacterVar then
-						if CharacterVar:WaitForChild("Humanoid").WalkSpeed > 18 then
+						if CharacterVar:WaitForChild("Humanoid").WalkSpeed > 16 then
 							getupvalue(StaminaFunc, 6).S = 99
 						end
 					end
@@ -57,38 +92,61 @@ _G.NoJumpCooldown = false;
 
 MainSection:NewToggle("No Jump Cooldown", "No jump cooldown.", function(state)
 	_G.NoJumpCooldown = state
+	
+	local __newindex
+	__newindex = hookmetamethod(game, "__newindex", function(t, k, v)
+		if (t:IsDescendantOf(game.Players.LocalPlayer.Character) and k == "Jump" and v == false) then
+			if _G.NoJumpCooldown == true then
+				return
+			end
+		end
+
+		return __newindex(t, k, v)
+	end)
+end)
+
+MainSection:NewLabel("Hitbox Expander")
+
+_G.HitboxExpander = false;
+
+
+
+
+local hbetoexpand = 0;
+
+local HeadSize = Vector3.new(1.2, 1, 1)
+
+
+MainSection:NewToggle("Toggle", "Toggles hitbox expander.", function(state)
+
+end)
+
+MainSection:NewSlider("Expand", "How much hitbox to expand.", 400, 100, function(v)
+	hbetoexpand = v
 end)
 
 MainSection:NewLabel("Other stuff")
 
 local newfov = 70
 
-MainSection:NewSlider("Field Of View", "Changes your field of view.", math.huge, 70, function(v)
+MainSection:NewSlider("Field Of View", "Changes your field of view.", 265, 70, function(v)
 	game.Workspace.Camera.FieldOfView = v
-	
-	newfov = v
 end)
 
-MainSection:NewKeybind("Zoom", "Changes your FOV to 30 for 1 second.", Enum.KeyCode.C, function()
-	game.Workspace.Camera.FieldOfView = 30
-	
-	wait(1)
-	
-	game.Workspace.Camera.FieldOfView = newfov
-end)
+_G.FullBrightNess = false;
 
+MainSection:NewToggle("Full Brightness", "Makes your game full brightness!", function(state)
+    _G.FullBrightNess = state;
 
-
-MainSection:NewButton("Full Brightness", "Makes your game full brightness!", function()
-	local function brightFunc()
-		game:GetService("Lighting").Brightness = 2
-		game:GetService("Lighting").ClockTime = 14
-		game:GetService("Lighting").FogEnd = 100000
-		game:GetService("Lighting").GlobalShadows = false
-		game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
-	end
-
-	local brightLoop = game:GetService("RunService").RenderStepped:Connect(brightFunc)
+	game:GetService("RunService").RenderStepped:Connect(function()
+        if _G.FullBrightNess == true then
+            game:GetService("Lighting").Brightness = 2
+            game:GetService("Lighting").ClockTime = 14
+            game:GetService("Lighting").FogEnd = 100000
+            game:GetService("Lighting").GlobalShadows = false
+            game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+        end
+    end) 
 end)
 
 _G.AutoUnlockDoors = false;
@@ -107,4 +165,136 @@ MainSection:NewToggle("Auto Unlock Doors", "Auto unlocks doors when nearby.", fu
 			end
 		end
 	end)	
+end)
+
+_G.BigLockPickBoxes = false
+
+MainSection:NewToggle("Lockpick Hbe", "Expands lockpick hitbox.", function(state)
+	_G.BigLockPickBoxes = state
+	
+	
+	game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+		if _G.BigLockPickBoxes == true then
+			if Item.Name == "LockpickGUI" then
+				Item.MF["LP_Frame"].Frames.B1.Bar.UIScale.Scale = 10
+				Item.MF["LP_Frame"].Frames.B2.Bar.UIScale.Scale = 10
+				Item.MF["LP_Frame"].Frames.B3.Bar.UIScale.Scale = 10
+			end
+		elseif _G.BigLockPickBoxes == false then
+			if Item.Name == "LockpickGUI" then
+				Item.MF["LP_Frame"].Frames.B1.Bar.UIScale.Scale = 1
+				Item.MF["LP_Frame"].Frames.B2.Bar.UIScale.Scale = 1
+				Item.MF["LP_Frame"].Frames.B3.Bar.UIScale.Scale = 1
+			end
+		end
+	end)
+end)
+
+_G.WalkSpeedEnabled = false
+_G.JumpPowerEnabled = false
+
+local PlayerTab = Window:NewTab("Player")
+local PlayerSection = PlayerTab:NewSection("Player")
+
+PlayerSection:NewToggle("Set WalkSpeed", "Sets walkspeed to amount", function(state)
+	_G.WalkSpeedEnabled = state
+end)
+
+PlayerSection:NewSlider("WalkSpeed", "Changes your speed", 30, 16, function(v)
+	while _G.WalkSpeedEnabled == true do
+        wait()
+		game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = v
+	end
+end)
+
+PlayerSection:NewToggle("Set JumpPower", "Sets jumppower to amount", function(state)
+	_G.JumpPowerEnabled = state
+end)
+
+PlayerSection:NewSlider("JumpPower", "Changes your jumppower", 75, 50, function(v)
+	while _G.JumpPowerEnabled == true do
+        wait()
+		game.Players.LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower = v
+	end	
+end)
+
+
+local GunModsTab = Window:NewTab("Gun Mods")
+local GunModsSection = GunModsTab:NewSection("Gun Mods")
+
+_G.NoRecoil = false;
+
+GunModsSection:NewToggle("No Recoil", "NO RECOIL!!", function(state)
+	_G.NoRecoil = state;
+
+	game.Players.LocalPlayer.Character.ChildAdded:Connect(function(Item)
+		if Item:IsA("Tool") then
+			for i, v in pairs(getgc(true)) do
+				if type(v) == "table" and rawget(v, "EquipTime") then
+					if _G.NoRecoil == true then
+						v.Recoil = 0
+                        v.CameraRecoilingEnabled = false
+                        v.AngleX_Min = 0 
+                        v.AngleX_Max = 0 
+                        v.AngleY_Min = 0
+                        v.AngleY_Max = 0
+                        v.AngleZ_Min = 0
+                        v.AngleZ_Max = 0
+					end
+				end
+			end
+		end
+    end)    
+end)
+
+local MiscTab = Window:NewTab("Misc")
+local MiscSection = MiscTab:NewSection("Misc")
+
+MiscSection:NewToggle("Noclip", "Who doesn't like walking thru walls?", function(state)
+	local Noclipping = nil
+
+	local Clip = false
+
+	if state == true then
+		wait(0.1)
+		local function NoclipLoop()
+			if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+				for _, child in pairs(game.players.LocalPlayer.Character:GetDescendants()) do
+					if child:IsA("BasePart") and child.CanCollide == true and child.Name ~= floatName then
+						child.CanCollide = false
+					end
+				end
+			end
+		end
+		Noclipping = game:GetService('RunService').Stepped:Connect(NoclipLoop)
+	else
+		if Noclipping then
+			Noclipping:Disconnect()
+		end
+		Clip = true
+	end
+end)
+
+MiscSection:NewButton("Full Brightness", "Makes your game full brightness!", function()
+	local function brightFunc()
+		game:GetService("Lighting").Brightness = 2
+		game:GetService("Lighting").ClockTime = 14
+		game:GetService("Lighting").FogEnd = 100000
+		game:GetService("Lighting").GlobalShadows = false
+		game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+	end
+
+	game:GetService("RunService").RenderStepped:Connect(brightFunc)
+end)
+
+MiscSection:NewToggle("Chat Logs", "Shows chat.", function(state)
+	if state == true then
+		local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+		ChatFrame.ChatChannelParentFrame.Visible = true
+		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(UDim.new(), ChatFrame.ChatChannelParentFrame.Size.Y)
+	elseif state == false then
+		local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+		ChatFrame.ChatChannelParentFrame.Visible = false
+		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
+	end
 end)
