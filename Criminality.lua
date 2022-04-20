@@ -1,3 +1,9 @@
+local Title = "Criminality Script by Nicuse"
+local Body  = "By pressing OK you agree to the terms of the script (Check your clipboard for link)" wait() setclipboard("https://pastebin.com/raw/Xy2f52im")
+
+local messagebox = messagebox(Body, Title, 0)
+
+
 local RunService = game:GetService("RunService")
 repeat wait() until game:IsLoaded()
 
@@ -48,6 +54,7 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHept
 local Window = Library.CreateLib("Criminality", "Ocean")
 
 local MainTab = Window:NewTab("Main")
+local VisualsTab = Window:NewTab("Visuals")
 
 -- Main
 
@@ -85,16 +92,6 @@ MainSection:NewToggle("Infinite Stamina", "Gives you inf stamina. (Only while sp
 				return OldFunction(...)
 			end)
 		end
-	end
-end)
-
-_G.AlwaysSprinting = false;
-
-MainSection:NewToggle("Always Sprinting", "Always sprints for you.", function(state)
-	local CharWalkspeed = game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed
-
-	if _G.AlwaysSprinting == true then
-		CharWalkspeed = 18.1
 	end
 end)
 
@@ -260,42 +257,7 @@ end)
 local MiscTab = Window:NewTab("Misc")
 local MiscSection = MiscTab:NewSection("Misc")
 
-MiscSection:NewToggle("Noclip", "Who doesn't like walking thru walls?", function(state)
-	local Noclipping = nil
-
-	local Clip = false
-
-	if state == true then
-		wait(0.1)
-		local function NoclipLoop()
-			if Clip == false and game.Players.LocalPlayer.Character ~= nil then
-				for _, child in pairs(game.players.LocalPlayer.Character:GetDescendants()) do
-					if child:IsA("BasePart") and child.CanCollide == true and child.Name ~= floatName then
-						child.CanCollide = false
-					end
-				end
-			end
-		end
-		Noclipping = game:GetService('RunService').Stepped:Connect(NoclipLoop)
-	else
-		if Noclipping then
-			Noclipping:Disconnect()
-		end
-		Clip = true
-	end
-end)
-
-MiscSection:NewButton("Full Brightness", "Makes your game full brightness!", function()
-	local function brightFunc()
-		game:GetService("Lighting").Brightness = 2
-		game:GetService("Lighting").ClockTime = 14
-		game:GetService("Lighting").FogEnd = 100000
-		game:GetService("Lighting").GlobalShadows = false
-		game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
-	end
-
-	game:GetService("RunService").RenderStepped:Connect(brightFunc)
-end)
+_G.FullBrightNess = false;
 
 MiscSection:NewToggle("Chat Logs", "Shows chat.", function(state)
 	if state == true then
@@ -308,3 +270,41 @@ MiscSection:NewToggle("Chat Logs", "Shows chat.", function(state)
 		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
 	end
 end)
+
+_G.SpamAdScript = false;
+_G.SpamAdScriptWait = 1; --default wait
+
+MiscSection:NewToggle("Spam Advertise Script", "Spam advertising script.", function(state)
+	_G.SpamAdScript = state
+
+	while _G.SpamAdScript == true do
+		wait(1)
+		local Event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest
+	
+		Event:FireServer("WANT FREE AND LEGIT AND RAGE CRIM SCRIPT? USE CRIMINALITY SCRIPT BY NICUSE (ON GITHUB)")
+	end
+end)
+
+local VisualsSection = VisualsTab:NewSection("Visuals")
+
+_G.EspToggled = false;
+
+VisualsSection:NewToggle("Toggle ESP", "Toggles esp.", function(state)
+	_G.EspToggled = state
+end)
+
+_G.MaxESPDistance = nil
+
+VisualsSection:NewSlider("Max Distance", "Max esp distance (studs)", 2500, 0, function(v)
+    _G.MaxESPDistance = v
+end)
+
+local Visuals_ESPSection = VisualsTab:NewSection("ESP")
+
+Visuals_ESPSection:NewToggle("Player ESP", "Toggles player esp.", function()
+	local Players = game:GetService("Players"):GetPlayers()
+end)
+
+
+_G.DealerESP = false
+_G.ScrapESP = false
