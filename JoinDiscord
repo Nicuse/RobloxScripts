@@ -1,4 +1,4 @@
-----Place the invite code in the quotes before executing. _G.DiscordInviteCode = "" without "--"
+--Before executing add "_G.DiscordInviteCode = 'invite code here!!'"
 
 JoinDiscord()
 
