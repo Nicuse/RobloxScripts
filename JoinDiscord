@@ -1,5 +1,4 @@
-_G.DiscordInviteCode = ""
---Place the invite code in the quotes before executing.
+----Place the invite code in the quotes before executing. _G.DiscordInviteCode = "" without "--"
 
 JoinDiscord()
 
