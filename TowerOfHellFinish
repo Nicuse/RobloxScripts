@@ -1,0 +1,10 @@
+local finish = game:GetService("Workspace").tower.finishes.Finish
+local originalCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+
+function Finish()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = finish.CFrame
+wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = originalCFrame
+end
+
+Finish()
