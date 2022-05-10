@@ -5,6 +5,9 @@ function Finish()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = finish.CFrame
 wait(1)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = originalCFrame
+print("Teleported to End")
 end
+
+print("Made by Nicuse#6163")
 
 Finish()
