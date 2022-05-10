@@ -1,13 +1,15 @@
 local finish = game:GetService("Workspace").tower.finishes.Finish
 local originalCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 
+_G.TeleportBack = true
+
 function Finish()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = finish.CFrame
 wait(1)
+if _G.TeleportBack == true then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = originalCFrame
+end
 print("Teleported to End")
 end
-
-print("Made by Nicuse#6163")
 
 Finish()
