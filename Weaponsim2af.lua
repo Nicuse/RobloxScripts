@@ -1,4 +1,4 @@
--- must hold sword
+-- dont hold sword
 
 -- game link:https://www.roblox.com/games/6191637341
 
