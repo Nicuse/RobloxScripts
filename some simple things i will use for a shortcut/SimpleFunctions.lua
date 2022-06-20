@@ -1,3 +1,0 @@
-function copyText(String)
-	
-end
