@@ -11,8 +11,6 @@ end
 
 Players = game:GetService("Players")
 
-MainUICorner = Instance.new("UICorner")
-MainUICorner.Parent = Holder
 Holder = Instance.new("Frame")
 Title = Instance.new("TextLabel")
 Dark = Instance.new("Frame")
