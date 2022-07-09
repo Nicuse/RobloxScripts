@@ -1,0 +1,5 @@
+-- // It will set your HWID to your clipboard
+
+local clipboard = setclipboard or toclipboard or set_clipboard or (Clipboard and Clipboard.set)
+
+clipboard(tostring(game:GetService("RbxAnalyticsService"):GetClientId()))
