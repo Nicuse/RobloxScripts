@@ -6145,7 +6145,7 @@ end)
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if State == Enum.TeleportState.Started then
 		if KeepInfYield and queueteleport then
-			queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+			queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Nicuse/RobloxScripts/main/InfiniteYieldEdited.lua'))()")
 		end
 	end
 end)
