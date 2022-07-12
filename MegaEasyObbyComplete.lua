@@ -32,6 +32,8 @@ local Window = Library.CreateLib(game:GetService("MarketplaceService"):GetProduc
 
 local Tab = Window:NewTab("Main")
 local Section = Tab:NewSection("Main")
+local Tab2 = Window:NewTab("Credits")
+local Section2 = Tab2:NewSection("Credits")
 
 Section:NewToggle("Complete Obby", "Completes the obby", function(state)
     _G.On = state;
@@ -39,4 +41,8 @@ end)
 
 Section:NewToggle("Auto Prestige", "Automatically prestiges when you complete the obby", function(state)
     _G.Prestige = state;
+end)
+
+Section2:NewButton("Nicuse#6163", "Nicuse#6163", function()
+    setclipboard("Nicuse#6163")
 end)
