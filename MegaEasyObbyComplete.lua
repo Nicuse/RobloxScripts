@@ -4,17 +4,16 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Checkpoints = Workspace.Checkpoints
-local num = Players.LocalPlayer.leaderstats.Stage.Value + 1
-
 
 _G.On = false -- false = turn off, true = true on
 _G.Prestige = false -- Auto Prestige
 
 spawn(function()
-    while wait() do
+    while wait(0.2) do
         if _G.On == true then
+            local num = Players.LocalPlayer.leaderstats.Stage.Value + 1
             if Checkpoints:FindFirstChild(num) then
-                Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Checkpoints:FindFirstChild(num).CFrame
+                Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Checkpoints:FindFirstChild(num).CFrame + Vector3.new(0, 5, 0)
             end
         end
     end
@@ -29,7 +28,6 @@ spawn(function()
 end)
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local GuiService = game:GetService("GuiService")
 local Window = Library.CreateLib(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name, "Ocean")
 
 local Tab = Window:NewTab("Main")
