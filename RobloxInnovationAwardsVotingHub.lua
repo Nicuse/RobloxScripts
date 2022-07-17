@@ -1,5 +1,5 @@
 --Game: https://www.roblox.com/games/9377039667/Roblox-Innovation-Awards-Voting-Hub
-([[Made by Nicuse#6163]]))({function(d)game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(96, 168, -152)
+([[Made by Nicuse#6163]])({function(d)game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(96, 168, -152)
 
 playerHead = game.Players.LocalPlayer.Character.Head
 
