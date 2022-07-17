@@ -1,5 +1,5 @@
 --Game: https://www.roblox.com/games/9377039667/Roblox-Innovation-Awards-Voting-Hub
-([[Made by Nicuse#6163]])({function(d)game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(96, 168, -152)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(96, 168, -152)
 
 playerHead = game.Players.LocalPlayer.Character.Head
 
@@ -19,4 +19,4 @@ game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(22, 23, 
 
 wait(1)
 
-game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)end)}
+game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
