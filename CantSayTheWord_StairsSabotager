@@ -1,0 +1,15 @@
+_G.enabled = true;
+
+spawn(function()
+    while wait() do
+        if _G.enabled == true then
+            for i,v in pairs(game.Workspace.Stairs:GetDescendants()) do
+                if v:IsA("TouchTransmitter") and v.Parent then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
+                    wait()
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1)
+                end
+            end
+        end
+    end
+end)
